@@ -15,10 +15,10 @@ int readImageInfo(std::string filename, itk::ImageIOBase::IOComponentType *Compo
   if (imageIO.IsNull())
     return 0;
 
-    
+
   imageIO->SetFileName(filename.c_str());
   imageIO->ReadImageInformation();
-  
+
   *ComponentType = imageIO->GetComponentType();
   return(1);
 }
@@ -41,7 +41,7 @@ void writeImScale(typename TImage::Pointer Im, std::string filename)
   typedef typename itk::ImageFileWriter<OutType> WriterType;
   typedef typename itk::StatisticsImageFilter<TImage> StatsType;
   typedef typename itk::ShiftScaleImageFilter<TImage, OutType> FitType;
-  
+
   typename StatsType::Pointer stats = StatsType::New();
   typename FitType::Pointer fitter = FitType::New();
 
@@ -53,7 +53,7 @@ void writeImScale(typename TImage::Pointer Im, std::string filename)
   float mn = stats->GetMinimum();
   float scale = range/(mx - mn);
   float shift = - mn;
-  
+
   fitter->SetInput(stats->GetOutput());
   fitter->SetScale(scale);
   fitter->SetShift(shift);
@@ -70,10 +70,9 @@ typename TImage::Pointer readIm(std::string filename)
   typedef typename itk::ImageFileReader<TImage> ReaderType;
   typename ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName(filename.c_str());
-  typename TImage::Pointer result = reader->GetOutput();
   try
     {
-    result->Update();
+      reader->Update();
     }
   catch(itk::ExceptionObject &ex)
     {
@@ -81,8 +80,9 @@ typename TImage::Pointer readIm(std::string filename)
     std::cout << filename << std::endl;
     return 0;
     }
-    result->DisconnectPipeline();
-    return(result);
+  typename TImage::Pointer result = reader->GetOutput();
+  result->DisconnectPipeline();
+  return(result);
 }
 
 // this will set orientation of everything to RIP

@@ -4,7 +4,7 @@
 
 int main(int argc, char * argv[])
 {
-	
+
   if( argc != 3 )
     {
     std::cerr << "usage: " << argv[0] << " intput output" << std::endl;
@@ -13,16 +13,15 @@ int main(int argc, char * argv[])
     // std::cerr << "  : " << std::endl;
     exit(1);
     }
-	
+
   const int dim = 3;
-	
+
   typedef unsigned char PType;
   typedef itk::Image< PType, dim > IType;
-	
-  typedef itk::Image< float, dim > DistType;
-	
-  IType::Pointer input = readIm<IType>(argv[1]);
 
+  typedef itk::Image< float, dim > DistType;
+
+  IType::Pointer input = readIm<IType>(argv[1]);
 
   typedef itk::BinaryThresholdImageFilter<IType, IType> ThreshType;
 
@@ -33,17 +32,18 @@ int main(int argc, char * argv[])
   thresh->SetUpperThreshold(130);
   thresh->SetOutsideValue(1);
   thresh->SetInsideValue(0);
+  thresh->Update();
 
-	
+
   typedef itk::SkeletonizeImageFilter<IType> SkelType;
 
   SkelType::Pointer skel = SkelType::New();
 
 //   skel->SetForegroundCellConnectivity(0);
 //   skel->SetBackgroundCellConnectivity(1);
- 
+
   skel->SetInput(thresh->GetOutput());
-  
+
   writeIm<IType>(skel->GetOutput(), argv[2]);
 
   return EXIT_SUCCESS;

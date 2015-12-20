@@ -7,7 +7,7 @@ int main(int argc, char * argv[])
 
   if( argc != 5 )
     {
-    std::cerr << "usage: " << argv[0] << "iterations intput outputfast outputbasic" << std::endl;
+    std::cerr << "usage: " << argv[0] << "iterations input outputfast outputbasic" << std::endl;
     std::cerr << " input: the input image" << std::endl;
     std::cerr << " output: the output image" << std::endl;
     // std::cerr << "  : " << std::endl;
@@ -15,7 +15,7 @@ int main(int argc, char * argv[])
     }
 
   const int dim = 2;
-  
+
   int iterations = atoi(argv[1]);
 
   typedef unsigned char PType;
